@@ -18,10 +18,10 @@ $("#submit").on("click", function(event) {
   var trainFirstTime = moment($("#first-time").val().trim(), 'HH:mm').format('HH:mm');
   var trainFrequency = $("#frequency").val().trim();
 
-  console.log(trainName);
-  console.log(trainDestination);
-  console.log(trainFirstTime);
-  console.log(trainFrequency);
+  // console.log(trainName);
+  // console.log(trainDestination);
+  // console.log(trainFirstTime);
+  // console.log(trainFrequency);
 
   var newTrain = {
     train: trainName,
@@ -32,10 +32,10 @@ $("#submit").on("click", function(event) {
 
   database.ref().push(newTrain);
 
-  console.log(newTrain.train);
-  console.log(newTrain.destination);
-  console.log(newTrain.initialtime);
-  console.log(newTrain.frequency);
+  // console.log(newTrain.train);
+  // console.log(newTrain.destination);
+  // console.log(newTrain.initialtime);
+  // console.log(newTrain.frequency);
 
   $("#train-name").val("");
   $("#destination").val("");
@@ -45,22 +45,38 @@ $("#submit").on("click", function(event) {
 });
 
 database.ref().on("child_added", function(childSnapshot, prevChildKey) {
-  console.log(childSnapshot.val());
+  // console.log(childSnapshot.val());
 
   var ctrainName = childSnapshot.val().train;
   var ctrainDestination = childSnapshot.val().destination;
   var ctrainFirstTime = childSnapshot.val().initialtime;
   var ctrainFrequency = childSnapshot.val().frequency;
+  var updatedTime;
+  console.log(moment(ctrainFirstTime, "HH:mm").format("HH:mm"));
 
-  console.log(ctrainName);
-  console.log(ctrainDestination);
-  console.log(ctrainFirstTime);
-  console.log(ctrainFrequency);
+  // console.log(ctrainName);
+  // console.log(ctrainDestination);
+  // console.log(ctrainFirstTime);
+  // console.log(ctrainFrequency);
 
-
-  var cnextArrival = moment(ctrainFirstTime, 'HH:mm').add(ctrainFrequency, 'm').format('HH:mm');
-  console.log(cnextArrival);
-
+  
+  var cnextArrival = moment(updatedTime, 'HH:mm').add(ctrainFrequency, 'm').format('HH:mm');
+  if (Math.sign(parseInt(moment().diff(moment(ctrainFirstTime, 'HH:mm'), 'm'))) === -1) {
+    var updatedTime = (moment(ctrainFirstTime, 'HH:mm').add(24, 'h'));
+  }
+  else if (parseInt(moment().diff(moment(ctrainFirstTime, 'HH:mm'), 'm')) > parseInt(ctrainFrequency)) {
+    var updatedTime = moment(ctrainFirstTime, 'HH:mm').add(parseInt(ctrainFrequency), 'm');
+    console.log(moment(ctrainFirstTime, 'HH:mm').add(parseInt(ctrainFrequency), 'm'));
+    console.log(moment(updatedTime, "HH:mm").format('HH:mm'));
+    console.log(parseInt(ctrainFrequency));
+    console.log(moment(ctrainFirstTime, "HH:mm").format("HH:mm"));
+  }
+  else {
+    var updatedTime = ctrainFirstTime;
+  };
+  
+  console.log(moment().diff(moment(ctrainFirstTime, 'HH:mm'), 'm'));
+  console.log(parseInt(moment().diff(moment(ctrainFirstTime, 'HH:mm'), 'm')) > parseInt(ctrainFrequency));
 
   var cminutesAway = moment(cnextArrival, 'HH:mm').diff(moment(), "minutes");
   
@@ -68,7 +84,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
     var cminutesAway = (moment(cnextArrival, 'HH:mm').add(24, 'h')).diff(moment(), "minutes");
   };
 
-  console.log(cminutesAway);
+  // console.log(cminutesAway);
   
 
   $("#tablebody").append(`
