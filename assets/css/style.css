@@ -1,4 +1,14 @@
-.jumbotron {
+.jumbotron, .top {
     background-color: burlywood;
     color: purple;
+}
+
+.box {
+    border-style: solid;
+    border-color:burlywood;
+    border-width: medium;
+}
+
+.box2 {
+    margin-top: 25px;
 }
